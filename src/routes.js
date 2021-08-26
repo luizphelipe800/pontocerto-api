@@ -1,6 +1,9 @@
 const routes = require('express').Router()
 
 const usuarios = require('./controllers/usuarios')
+const sessions = require('./controllers/sessions')
+
+routes.post('/sessions', sessions.insert)
 
 routes.get('/usuarios', usuarios.index)
 routes.get('/usuarios/:uid', usuarios.find)
