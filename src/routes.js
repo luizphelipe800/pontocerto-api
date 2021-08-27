@@ -21,6 +21,6 @@ routes.put('/pontos/:pid', pontos.edit)
 routes.patch('/pontos/:pid', pontos.checkin)
 
 routes.get('/relatorios', relatorios.index)
-routes.get('/relatorios/:uid', relatorios.index)
+routes.get('/relatorios/:uid', relatorios.find)
 
 module.exports = routes

@@ -26,8 +26,10 @@ module.exports = {
                 ponto.total = await calculateExtraTime(ponto.horarios)
                 ponto.save()
 
-                usuario.historico.push(ponto._id)
-                usuario.save()
+                if(!usuario.historico.some(ponto => ponto._id === ponto._id)){
+                    usuario.historico.push(ponto._id)
+                    usuario.save()
+                }
 
                 return res.status(200).json('você finalizou o expediente')
             }

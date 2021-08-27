@@ -6,7 +6,7 @@ module.exports = {
         const { inicio, final } = req.query
         const format = 'yyyy-MM-dd'
 
-        const usuario = await Usuarios.findOne({ email: 'jane@email.com'}).populate('historico')
+        const usuario = await Usuarios.findOne({ email: req.user.email }).populate('historico')
 
         if(!usuario) return res.status(400).json('usuario não encontrado!')
         
@@ -24,6 +24,7 @@ module.exports = {
 
         return res.status(200).json(historicoFiltrado)
     },
+
     find: async (req, res) => {
         const { inicio, final } = req.query
         const { uid } = req.params
