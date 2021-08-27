@@ -33,6 +33,4 @@ const calculateDuration = horarios => {
     return worked.minus(dinner)
 }
 
-console.log(calculateExtraTime(['07:00', '12:00', '13:30', '17:00']))
-
 module.exports = calculateExtraTime

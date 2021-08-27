@@ -16,9 +16,9 @@ const UsuarioSchema = new Schema({
     }]
 })
 
-UsuarioSchema.methods.comparePassword = function(senha){
+UsuarioSchema.method('compareSenha', async function(senha){
     return compareSync(senha, this.senha)
-}
+})
 
 UsuarioSchema.pre('save', function(){
     this.senha = hashSync(this.senha, 8)
