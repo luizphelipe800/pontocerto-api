@@ -1,6 +1,8 @@
 const Pontos = require('../models/pontos')
 const Usuarios = require('../models/usuarios')
 
+const calculateExtraTime = require('../utils/calculateExtraTime')
+
 module.exports = {
     find: async (req, res) => {
         try {
@@ -18,9 +20,16 @@ module.exports = {
             const { pid } = req.params
             const { horario } = req.body
             const ponto = await Pontos.findById(pid)
+            const usuario = await Usuarios.findById(ponto.usuarioId)
 
             if(ponto.horarios.length >= 4){
-                return res.status(400).json('você já finalizou o expediente')
+                ponto.total = await calculateExtraTime(ponto.horarios)
+                ponto.save()
+
+                usuario.historico.push(ponto._id)
+                usuario.save()
+
+                return res.status(200).json('você finalizou o expediente')
             }
 
             ponto.horarios.push(horario)
@@ -35,10 +44,20 @@ module.exports = {
     edit: async (req, res) => {
         try {
             const { pid } = req.params
-            const { horarios, feriado } = req.body
-            await Pontos.findByIdAndUpdate(pid, { horarios, feriado })
+            let { horarios, feriado, total } = req.body
 
-            return res.status(200).json('ponto atualizado!')
+            if(horarios){
+                total = await calculateExtraTime(horarios)
+            }
+
+            if(feriado){
+                horarios = ['00:00', '00:00', '00:00', '00:00']
+                total = '00:00'
+            }
+
+            const ponto = await Pontos.findByIdAndUpdate(pid, { horarios, feriado, total })
+
+            return res.status(200).json('ponto atualizado')
         } catch (error) {
             return res.status(400).json(error.message)
         }

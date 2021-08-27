@@ -3,7 +3,7 @@ const Usuarios = require('../models/usuarios')
 module.exports = {
     index: async (req, res) => {
         try {
-            const usuarios = await Usuarios.find()
+            const usuarios = await Usuarios.find().populate('historico')
             return res.status(200).json(usuarios)
         }catch(error) {
             return res.status(400).json(error.message)
@@ -12,7 +12,7 @@ module.exports = {
     find: async (req, res) => {
         try {
             const { uid } = req.params
-            const usuario = await Usuarios.findById(uid)
+            const usuario = await Usuarios.findById(uid).populate('historico')
             return res.status(200).json(usuario)
         }catch(error) {
             return res.status(400).json(error.message)
