@@ -47,5 +47,13 @@ module.exports = {
         })
 
         return res.status(200).json(historicoFiltrado)
+    },
+
+    download: async (req, res) => {
+        try {
+            const { dados } = req.body 
+        } catch (error) {
+            return res.status(400).json('falha ao exportar os dados')
+        }
     }
 }

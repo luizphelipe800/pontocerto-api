@@ -14,12 +14,12 @@ routes.use(passport.authenticate('jwt', {session: false}))
 
 routes.get('/usuarios', admin, usuarios.index)
 routes.get('/usuarios/:uid', usuarios.find)
-routes.put('/usuarios/:uid', admin, usuarios.edit)
+routes.put('/usuarios/:uid', usuarios.edit)
 routes.delete('/usuarios/:uid', admin, usuarios.remove)
 
-routes.get('/pontos/:codigo', pontos.find)
+routes.get('/pontos/:pid', pontos.find)
 routes.put('/pontos/:pid', admin, pontos.edit)
-routes.patch('/pontos/:pid', pontos.checkin)
+routes.post('/pontos', pontos.checkin)
 
 routes.get('/relatorios', relatorios.index)
 routes.get('/relatorios/:uid', admin, relatorios.find)

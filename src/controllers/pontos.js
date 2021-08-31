@@ -1,13 +1,13 @@
 const Pontos = require('../models/pontos')
-const Usuarios = require('../models/usuarios')
+const { DateTime } = require('luxon')
 
 const calculateExtraTime = require('../utils/calculateExtraTime')
 
 module.exports = {
     find: async (req, res) => {
         try {
-            const { codigo } = req.params
-            const ponto = await Pontos.findOne({ codigo })
+            const { pid } = req.params
+            const ponto = await Pontos.findById(pid)
 
             return res.status(200).json(ponto)
         } catch (error) {
@@ -17,19 +17,15 @@ module.exports = {
 
     checkin: async (req, res) => {
         try {
-            const { pid } = req.params
             const { horario } = req.body
-            const ponto = await Pontos.findById(pid)
-            const usuario = await Usuarios.findById(ponto.usuarioId)
+            const { _id: usuarioId } = req.user
+            const currentDate = DateTime.fromJSDate(new Date()).toISODate()
+
+            const ponto = await Pontos.findOne({ usuarioId, data: currentDate })
 
             if(ponto.horarios.length >= 4){
                 ponto.total = await calculateExtraTime(ponto.horarios)
                 ponto.save()
-
-                if(!usuario.historico.some(ponto => ponto._id === ponto._id)){
-                    usuario.historico.push(ponto._id)
-                    usuario.save()
-                }
 
                 return res.status(200).json('você finalizou o expediente')
             }

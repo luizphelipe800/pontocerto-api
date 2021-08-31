@@ -8,24 +8,26 @@ module.exports = {
     insert: async (req, res) => {
         try{
             const { email, senha } = req.body
-            const date = DateTime.fromJSDate(new Date()).toISODate()
 
             const usuario = await Usuario.findOne({ email })
             
             if(!usuario) return res.status(400).json('email não encontrado!')
             if(!usuario.compareSenha(senha)) return res.status(400).json('você errou a senha')
 
-            const codigo = `${usuario._id}-${new Date().toLocaleDateString().split('/').join('-')}`
+            const usuarioId = usuario._id
+            const date = DateTime.fromJSDate(new Date()).toISODate()
 
-            let ponto = await Ponto.findOne({ codigo })
+            let ponto = await Ponto.findOne({ usuarioId, data: date })
 
             if(!ponto){
-                ponto = await Ponto.create({ codigo, usuarioId: usuario._id, data: date })
+                ponto = await Ponto.create({ usuarioId, data: date })
+                usuario.historico.push(ponto._id)
+                await usuario.save()
             }
 
             const token = jwt.sign({ _id: usuario._id }, process.env.JWT_SECRET_KEY, { expiresIn: '2 days' })
 
-            return res.status(200).json({ token, ponto })
+            return res.status(200).json({ token })
         }catch(error){
             return res.status(400).json(error.message)
         }
