@@ -1,4 +1,5 @@
 const routes = require('express').Router()
+const json2xls = require('json2xls')
 const passport = require('./middlewares/passport')
 const admin = require('./middlewares/admin')
 
@@ -23,5 +24,8 @@ routes.post('/pontos', pontos.checkin)
 
 routes.get('/relatorios', relatorios.index)
 routes.get('/relatorios/:uid', admin, relatorios.find)
+
+routes.use(json2xls.middleware)
+routes.post('/relatorios', admin, relatorios.download)
 
 module.exports = routes

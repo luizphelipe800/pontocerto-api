@@ -1,5 +1,6 @@
 const Usuarios = require('../models/usuarios')
 const { DateTime } = require('luxon')
+const json2xls = require('json2xls')
 
 module.exports = {
     index: async (req, res) => {
@@ -52,8 +53,29 @@ module.exports = {
     download: async (req, res) => {
         try {
             const { dados } = req.body 
+
+            const dadosExportados = dados.map(dado => {
+                let { data, horarios, feriado, total } = dado
+                horarios = {
+                    entrada: horarios[0],
+                    almoço: horarios[1],
+                    retorno: horarios[2],
+                    final: horarios[3]
+                }
+
+                feriado = feriado === 1 ? 'sim' : 'não'
+
+                return { data, ...horarios, feriado, total }
+            })
+
+            const options = {}
+
+            res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  	        res.setHeader("Content-Disposition", "attachment; filename=" + "banco.xls");
+  	        
+            return res.status(200).xls('dados.xls', dadosExportados, options)
         } catch (error) {
-            return res.status(400).json('falha ao exportar os dados')
+            return res.status(400).json(error.message)
         }
     }
 }
