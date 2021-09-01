@@ -1,6 +1,5 @@
 const Usuarios = require('../models/usuarios')
 const { DateTime } = require('luxon')
-const json2xls = require('json2xls')
 
 module.exports = {
     index: async (req, res) => {
@@ -37,15 +36,17 @@ module.exports = {
 
         const historico = usuario.historico
 
-        if(!inicio && !final) return res.status(200).json(historico)
+        if(!inicio || !final) return res.status(200).json(historico)
 
         const dateInicio = DateTime.fromFormat(inicio, format)
         const dateFinal = DateTime.fromFormat(final, format)
 
         const historicoFiltrado = historico.filter(ponto => {
             const pontoDate = DateTime.fromFormat(ponto.data, format)
-            return dateInicio <= pontoDate <= dateFinal
+            return dateInicio <= pontoDate && pontoDate <= dateFinal
         })
+
+        console.log(historicoFiltrado)
 
         return res.status(200).json(historicoFiltrado)
     },
