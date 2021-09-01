@@ -1,4 +1,5 @@
 const Usuarios = require('../models/usuarios')
+const calculateTotalExtraTime = require('../utils/calculateTotalExtraTime')
 const { DateTime } = require('luxon')
 
 module.exports = {
@@ -10,19 +11,24 @@ module.exports = {
 
         if(!usuario) return res.status(400).json('usuario não encontrado!')
         
-        const historico = usuario.historico
+        let historico = usuario.historico
 
-        if(!inicio && !final) return res.status(200).json(historico)
+        if(!inicio && !final) {
+            const total = await calculateTotalExtraTime(historico)
+            return res.status(200).json({historico, total})
+        }
 
         const dateInicio = DateTime.fromFormat(inicio, format)
         const dateFinal = DateTime.fromFormat(final, format)
 
-        const historicoFiltrado = historico.filter(ponto => {
+        historico = historico.filter(ponto => {
             const pontoDate = DateTime.fromFormat(ponto.data, format)
             return dateInicio <= pontoDate && pontoDate <= dateFinal
         })
 
-        return res.status(200).json(historicoFiltrado)
+        const total = await calculateTotalExtraTime(historico)
+
+        return res.status(200).json({ historico, total })
     },
 
     find: async (req, res) => {
@@ -34,21 +40,24 @@ module.exports = {
 
         if(!usuario) return res.status(400).json('usuario não encontrado!')
 
-        const historico = usuario.historico
+        let historico = usuario.historico
 
-        if(!inicio || !final) return res.status(200).json(historico)
+        if(!inicio && !final) {
+            const total = await calculateTotalExtraTime(historico)
+            return res.status(200).json({historico, total})
+        }
 
         const dateInicio = DateTime.fromFormat(inicio, format)
         const dateFinal = DateTime.fromFormat(final, format)
 
-        const historicoFiltrado = historico.filter(ponto => {
+        historico = historico.filter(ponto => {
             const pontoDate = DateTime.fromFormat(ponto.data, format)
             return dateInicio <= pontoDate && pontoDate <= dateFinal
         })
 
-        console.log(historicoFiltrado)
+        const total = await calculateTotalExtraTime(historico)
 
-        return res.status(200).json(historicoFiltrado)
+        return res.status(200).json({ historico, total })
     },
 
     download: async (req, res) => {
