@@ -1,5 +1,5 @@
 const { Schema, model, Types } = require('../configs/mongoose')
-const { hashSync, compareSync } = require('bcryptjs')
+const { compareSync } = require('bcryptjs')
 
 const UsuarioSchema = new Schema({
     nome: { type: String, required: true },
@@ -16,12 +16,8 @@ const UsuarioSchema = new Schema({
     }]
 })
 
-UsuarioSchema.method('compareSenha', async function(senha){
+UsuarioSchema.methods.compareSenha = function(senha){
     return compareSync(senha, this.senha)
-})
-
-UsuarioSchema.pre('save', function(){
-    this.senha = hashSync(this.senha, 8)
-})
+}
 
 module.exports = model('usuarios', UsuarioSchema)

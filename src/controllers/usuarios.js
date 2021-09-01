@@ -1,4 +1,7 @@
 const Usuarios = require('../models/usuarios')
+const { hashSync, genSaltSync } = require('bcryptjs')
+
+const salt = genSaltSync(8)
 
 module.exports = {
     index: async (req, res) => {
@@ -20,7 +23,8 @@ module.exports = {
     },
     insert: async (req, res) => {
         try {
-            const usuario = await Usuarios.create(req.body)
+            const hash = hashSync(req.body.senha, salt)
+            const usuario = await Usuarios.create({...req.body, senha: hash})
             return res.status(201).json(usuario)
         }catch(error) {
             return res.status(400).json(error.message)

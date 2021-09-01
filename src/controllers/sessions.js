@@ -12,8 +12,9 @@ module.exports = {
             const usuario = await Usuario.findOne({ email })
             
             if(!usuario) return res.status(400).json('email não encontrado!')
-            if(!usuario.compareSenha(senha)) return res.status(400).json('você errou a senha')
 
+            if(!usuario.compareSenha(senha)) return res.status(400).json('você errou a senha')
+            
             const usuarioId = usuario._id
             const date = DateTime.fromJSDate(new Date()).toISODate()
 
@@ -25,10 +26,10 @@ module.exports = {
                 await usuario.save()
             }
 
-            const token = jwt.sign({ _id: usuario._id }, process.env.JWT_SECRET_KEY, { expiresIn: '2 days' })
-            const { _id, funcao } = usuario
+            const token = jwt.sign({ _id: usuarioId }, process.env.JWT_SECRET_KEY, { expiresIn: '2 days' })
+            const { funcao } = usuario
 
-            return res.status(200).json({ user: {_id, email, funcao}, token })
+            return res.status(200).json({ user: { usuarioId, email, funcao}, token })
         }catch(error){
             return res.status(400).json(error.message)
         }
