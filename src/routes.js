@@ -18,6 +18,7 @@ routes.get('/usuarios/:uid', usuarios.find)
 routes.put('/usuarios/:uid', usuarios.edit)
 routes.delete('/usuarios/:uid', admin, usuarios.remove)
 
+routes.get('/pontos', pontos.index)
 routes.get('/pontos/:pid', pontos.find)
 routes.put('/pontos/:pid', admin, pontos.edit)
 routes.post('/pontos', pontos.checkin)

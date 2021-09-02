@@ -4,6 +4,17 @@ const { DateTime } = require('luxon')
 const calculateExtraTime = require('../utils/calculateExtraTime')
 
 module.exports = {
+    index: async (req, res) => {
+        try {
+            const { _id: usuarioId } = req.user
+            const currentDate = DateTime.fromJSDate(new Date()).toISODate()
+
+            const ponto = await Pontos.findOne({ usuarioId, data: currentDate })
+            return res.status(200).json(ponto)
+        } catch (error) {
+            return res.status(400).json(error.message)
+        }
+    },
     find: async (req, res) => {
         try {
             const { pid } = req.params
@@ -25,7 +36,7 @@ module.exports = {
 
             if(ponto.horarios.length >= 4){
                 ponto.total = await calculateExtraTime(ponto.horarios)
-                ponto.save()
+                await ponto.save()
 
                 return res.status(200).json('você finalizou o expediente')
             }
