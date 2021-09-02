@@ -11,9 +11,9 @@ module.exports = {
 
             const usuario = await Usuario.findOne({ email })
             
-            if(!usuario) return res.status(400).json('email não encontrado!')
+            if(!usuario) return res.status(400).json(`acho que você errou o email ${String.fromCodePoint(0x1F615)}`)
 
-            if(!usuario.compareSenha(senha)) return res.status(400).json('você errou a senha')
+            if(!usuario.compareSenha(senha)) return res.status(400).json(`hmm sua senha está incorreta ${String.fromCodePoint(0x1F615)}`)
             
             const usuarioId = usuario._id
             const date = DateTime.fromJSDate(new Date()).toISODate()

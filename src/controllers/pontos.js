@@ -38,7 +38,7 @@ module.exports = {
                 ponto.total = await calculateExtraTime(ponto.horarios)
                 await ponto.save()
 
-                return res.status(200).json('você finalizou o expediente')
+                return res.status(400).json(`seu expediente já terminou ${String.fromCodePoint(0x1F634)}`)
             }
 
             ponto.horarios.push(horario)
