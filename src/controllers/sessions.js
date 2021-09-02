@@ -13,7 +13,9 @@ module.exports = {
             
             if(!usuario) return res.status(400).json(`acho que você errou o email ${String.fromCodePoint(0x1F615)}`)
 
-            if(!usuario.compareSenha(senha)) return res.status(400).json(`hmm sua senha está incorreta ${String.fromCodePoint(0x1F615)}`)
+            if(usuario.funcao == 1){
+                if(!usuario.compareSenha(senha)) return res.status(400).json(`hmm sua senha está incorreta ${String.fromCodePoint(0x1F615)}`)
+            }
             
             const usuarioId = usuario._id
             const date = DateTime.fromJSDate(new Date()).toISODate()
