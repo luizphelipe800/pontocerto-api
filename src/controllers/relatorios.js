@@ -44,7 +44,7 @@ module.exports = {
 
         if(!inicio && !final) {
             const total = await calculateTotalExtraTime(historico)
-            return res.status(200).json({historico, total})
+            return res.status(200).json({ nome: usuario.nome, historico, total })
         }
 
         const dateInicio = DateTime.fromFormat(inicio, format)
@@ -57,7 +57,7 @@ module.exports = {
 
         const total = await calculateTotalExtraTime(historico)
 
-        return res.status(200).json({ historico, total })
+        return res.status(200).json({ nome: usuario.nome, historico, total })
     },
 
     download: async (req, res) => {
