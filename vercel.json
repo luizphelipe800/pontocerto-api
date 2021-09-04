@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
     "version": 2,
+=======
+    "version": "2",
+>>>>>>> 66e5f82a948d82c60e203c6202a6da1ec0bfb6af
     "builds": [
         { "src": "./index.js", "use": "@vercel/node" }
     ],
