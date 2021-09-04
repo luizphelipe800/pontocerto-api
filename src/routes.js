@@ -7,6 +7,9 @@ const relatorios = require('./controllers/relatorios')
 const usuarios = require('./controllers/usuarios')
 const sessions = require('./controllers/sessions')
 const pontos = require('./controllers/pontos')
+const { Router } = require('express')
+
+routes.get('/', (req, res) => res.status(200).json('aplicação rodando...'))
 
 routes.post('/sessions', sessions.insert)
 routes.post('/usuarios', usuarios.insert)
