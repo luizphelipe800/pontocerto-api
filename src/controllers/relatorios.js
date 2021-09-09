@@ -1,5 +1,7 @@
 const Usuarios = require('../models/usuarios')
 const calculateTotalExtraTime = require('../utils/calculateTotalExtraTime')
+const calculateExtraTime = require('../utils/calculateExtraTime')
+const formatTime = require('../utils/formatTime')
 const { DateTime } = require('luxon')
 
 module.exports = {
@@ -12,6 +14,18 @@ module.exports = {
         if(!usuario) return res.status(400).json('usuario não encontrado!')
         
         let historico = usuario.historico
+
+        historico = historico.map(ponto => {
+            if(ponto.feriado || ponto.horarios.length === 0){
+                return ponto
+            }
+
+            const total = calculateExtraTime(ponto.horarios)
+            ponto.total = total.then(data => data)
+            ponto.total = formatTime(ponto.total)
+            
+            return ponto
+        })
 
         if(!inicio && !final) {
             const total = await calculateTotalExtraTime(historico)
@@ -26,7 +40,7 @@ module.exports = {
             return dateInicio <= pontoDate && pontoDate <= dateFinal
         })
 
-        const total = await calculateTotalExtraTime(historico)
+        const total = await calculateExtraTime(historico)
 
         return res.status(200).json({ historico, total })
     },
@@ -41,6 +55,18 @@ module.exports = {
         if(!usuario) return res.status(400).json('usuario não encontrado!')
 
         let historico = usuario.historico
+
+        historico = historico.map(ponto => {
+            if(ponto.feriado || ponto.horarios.length === 0){
+                return ponto
+            }
+
+            const total = calculateExtraTime(ponto.horarios)
+            ponto.total = total.then(data => data)
+            ponto.total = formatTime(ponto.total)
+            
+            return ponto
+        })
 
         if(!inicio && !final) {
             const total = await calculateTotalExtraTime(historico)
@@ -73,9 +99,9 @@ module.exports = {
                     final: horarios[3]
                 }
 
-                feriado = feriado === 1 ? 'sim' : 'não'
+                feriado = feriado ? 'sim' : 'não'
 
-                return { data, ...horarios, feriado, total }
+                return { data, ...horarios, folga: feriado, total }
             })
 
             const options = {}
