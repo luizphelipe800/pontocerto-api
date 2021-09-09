@@ -1,4 +1,6 @@
 const Pontos = require('../models/pontos')
+const Usuarios = require('../models/usuarios')
+
 const { DateTime } = require('luxon')
 
 const calculateExtraTime = require('../utils/calculateExtraTime')
@@ -33,9 +35,11 @@ module.exports = {
             const currentDate = DateTime.fromJSDate(new Date()).toISODate()
 
             const ponto = await Pontos.findOne({ usuarioId, data: currentDate })
+            const usuario = await Usuarios.findById(usuarioId)
+            const { expediente: { entrada, saida } } = usuario
 
             if(ponto.horarios.length >= 4){
-                ponto.total = await calculateExtraTime(ponto.horarios)
+                ponto.total = await calculateExtraTime(ponto.horarios, [entrada, saida])
                 await ponto.save()
 
                 return res.status(400).json(`seu expediente já terminou ${String.fromCodePoint(0x1F634)}`)
@@ -55,8 +59,12 @@ module.exports = {
             const { pid } = req.params
             let { horarios, feriado, total } = req.body
 
+            const { usuarioId } = await Pontos.findById(pid)
+            const usuario = await Usuarios.findById(usuarioId)
+            const { expediente: { entrada, saida } } = usuario
+
             if(horarios){
-                total = await calculateExtraTime(horarios)
+                total = await calculateExtraTime(horarios, [entrada, saida])
             }
 
             if(feriado){
