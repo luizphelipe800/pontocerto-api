@@ -3,12 +3,14 @@ const { DateTime, Duration } = require('luxon')
 
 /**
  * @param {[String]} times
+ * @param {[String]} userTime 
  * @description um array com os horarios de ponto batido
  * @example ['07:00', '12:00', '13:00', '17:00']
  */
-const calculateExtraTime = times => {
+
+const calculateExtraTime = (times, userTime) => {
     return new Promise((resolve, reject) => {
-        const normalDuration = calculateDuration(['07:00', '12:00', '13:00', '17:00'])
+        const normalDuration = calculateDuration([userTime[0], '12:00', '13:00', userTime[1]])
         const duration = calculateDuration(times)
     
         const diff = duration.minus(normalDuration)

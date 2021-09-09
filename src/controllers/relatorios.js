@@ -12,6 +12,8 @@ module.exports = {
         const usuario = await Usuarios.findOne({ email: req.user.email }).populate('historico')
 
         if(!usuario) return res.status(400).json('usuario não encontrado!')
+
+        const { expediente: { entrada, saida } } = usuario
         
         let historico = usuario.historico
 
@@ -20,7 +22,7 @@ module.exports = {
                 return ponto
             }
 
-            const total = calculateExtraTime(ponto.horarios)
+            const total = calculateExtraTime(ponto.horarios, [entrada, saida])
             ponto.total = total.then(data => data)
             ponto.total = formatTime(ponto.total)
             
@@ -40,7 +42,7 @@ module.exports = {
             return dateInicio <= pontoDate && pontoDate <= dateFinal
         })
 
-        const total = await calculateExtraTime(historico)
+        const total = await calculateExtraTime(historico, [entrada, saida])
 
         return res.status(200).json({ historico, total })
     },
@@ -54,6 +56,8 @@ module.exports = {
 
         if(!usuario) return res.status(400).json('usuario não encontrado!')
 
+        const { expediente: { entrada, saida } } = usuario
+
         let historico = usuario.historico
 
         historico = historico.map(ponto => {
@@ -61,7 +65,7 @@ module.exports = {
                 return ponto
             }
 
-            const total = calculateExtraTime(ponto.horarios)
+            const total = calculateExtraTime(ponto.horarios, [entrada, saida])
             ponto.total = total.then(data => data)
             ponto.total = formatTime(ponto.total)
             
