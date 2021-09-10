@@ -9,14 +9,12 @@ const { DateTime, Duration } = require('luxon')
  */
 
 const calculateExtraTime = (times, userTime) => {
-    return new Promise((resolve, reject) => {
-        const normalDuration = calculateDuration([userTime[0], '12:00', '13:00', userTime[1]])
-        const duration = calculateDuration(times)
-    
-        const diff = duration.minus(normalDuration)
-    
-        return resolve(diff.toFormat('hh:mm'))
-    })
+    const normalDuration = calculateDuration([userTime[0], '12:00', '13:00', userTime[1]])
+    const duration = calculateDuration(times)
+
+    const diff = duration.minus(normalDuration)
+
+    return diff.toFormat('hh:mm')
 }
 
 const calculateDuration = horarios => {
