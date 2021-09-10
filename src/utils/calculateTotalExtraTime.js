@@ -9,9 +9,11 @@ const calculateTotalExtraTime = historico => {
 		let totalHoras = 0
 		let totalMinutos = 0
 		historico.forEach(({ total }) => {
-			const [horas, minutos] = total.split(':')
-			totalHoras += horas.charAt(0) === '-' ? -Math.abs(horas) : parseInt(horas)
-			totalMinutos += minutos.charAt(0) === '-' ? -Math.abs(minutos) : parseInt(minutos)
+			if(total){
+				const [horas, minutos] = total.split(':')
+				totalHoras += horas.charAt(0) === '-' ? -Math.abs(horas) : parseInt(horas)
+				totalMinutos += minutos.charAt(0) === '-' ? -Math.abs(minutos) : parseInt(minutos)
+			}
 		})
 		while (totalMinutos <= -60) {
 			totalMinutos += 60
@@ -25,7 +27,7 @@ const calculateTotalExtraTime = historico => {
 		totalMinutos = totalMinutos < 10 && totalMinutos > -10 ? `0${totalMinutos}` : `${totalMinutos}`
 		return `${totalHoras}:${totalMinutos}`
 	} catch (error) {
-		return error
+		return (error.message)
 	}
 }
 

@@ -5,16 +5,20 @@
  */
 
 const formatTime = time => {
-    let [horas, minutos] = time.split(':')
-
-    if(minutos.includes('-')){
-        minutos = minutos.slice(1, 3)
-        if(!horas.includes('-')){
-            horas = '-'+horas
+    try{
+        let [horas, minutos] = time.split(':')
+    
+        if(minutos.includes('-')){
+            minutos = minutos.slice(1, 3)
+            if(!horas.includes('-')){
+                horas = '-'+horas
+            }
         }
+    
+        return [horas, minutos].join(':')
+    }catch(error){
+        console.log(error.message)
     }
-
-    return [horas, minutos].join(':')
 }
 
 module.exports = formatTime
