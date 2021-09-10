@@ -23,14 +23,13 @@ module.exports = {
             }
 
             const total = calculateExtraTime(ponto.horarios, [entrada, saida])
-            ponto.total = total.then(data => data)
-            ponto.total = formatTime(ponto.total)
+            ponto.total = formatTime(total)
             
             return ponto
         })
 
         if(!inicio && !final) {
-            const total = await calculateTotalExtraTime(historico)
+            const total = calculateTotalExtraTime(historico)
             return res.status(200).json({historico, total})
         }
 
@@ -42,7 +41,7 @@ module.exports = {
             return dateInicio <= pontoDate && pontoDate <= dateFinal
         })
 
-        const total = await calculateExtraTime(historico, [entrada, saida])
+        const total = calculateExtraTime(historico, [entrada, saida])
 
         return res.status(200).json({ historico, total })
     },
@@ -66,14 +65,13 @@ module.exports = {
             }
 
             const total = calculateExtraTime(ponto.horarios, [entrada, saida])
-            ponto.total = total.then(data => data)
-            ponto.total = formatTime(ponto.total)
+            ponto.total = formatTime(total)
             
             return ponto
         })
 
         if(!inicio && !final) {
-            const total = await calculateTotalExtraTime(historico)
+            const total = calculateTotalExtraTime(historico)
             return res.status(200).json({ nome: usuario.nome, historico, total })
         }
 
@@ -85,7 +83,7 @@ module.exports = {
             return dateInicio <= pontoDate && pontoDate <= dateFinal
         })
 
-        const total = await calculateTotalExtraTime(historico)
+        const total = calculateTotalExtraTime(historico)
 
         return res.status(200).json({ nome: usuario.nome, historico, total })
     },
