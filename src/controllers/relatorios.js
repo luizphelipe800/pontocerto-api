@@ -60,7 +60,7 @@ module.exports = {
         let historico = usuario.historico
 
         historico = historico.map(ponto => {
-            if(ponto.feriado || ponto.horarios.length === 0){
+            if(ponto.feriado || ponto.horarios.length < 4){
                 return ponto
             }
 
