@@ -2,6 +2,7 @@ const Usuarios = require('../models/usuarios')
 const calculateTotalExtraTime = require('../utils/calculateTotalExtraTime')
 const calculateExtraTime = require('../utils/calculateExtraTime')
 const formatTime = require('../utils/formatTime')
+const formatDate = require('../utils/formatDate')
 const { DateTime } = require('luxon')
 
 module.exports = {
@@ -24,6 +25,7 @@ module.exports = {
 
             const total = calculateExtraTime(ponto.horarios, [entrada, saida])
             ponto.total = formatTime(total)
+            ponto.date = formatDate(ponto.date)
             
             return ponto
         })
@@ -59,7 +61,10 @@ module.exports = {
 
         let historico = usuario.historico
 
+
         historico = historico.map(ponto => {
+            ponto.data = formatDate(ponto.data)
+
             if(ponto.feriado || ponto.horarios.length < 4){
                 return ponto
             }
