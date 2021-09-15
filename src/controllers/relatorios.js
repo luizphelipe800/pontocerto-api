@@ -63,8 +63,6 @@ module.exports = {
 
 
         historico = historico.map(ponto => {
-            ponto.data = formatDate(ponto.data)
-
             if(ponto.feriado || ponto.horarios.length < 4){
                 return ponto
             }
@@ -77,6 +75,8 @@ module.exports = {
 
         if(!inicio && !final) {
             const total = calculateTotalExtraTime(historico)
+            historico = formatDate(historico)
+            console.log(historico)
             return res.status(200).json({ nome: usuario.nome, historico, total })
         }
 
@@ -89,7 +89,8 @@ module.exports = {
         })
 
         const total = calculateTotalExtraTime(historico)
-
+        historico = formatDate(historico)
+        console.log(historico)
         return res.status(200).json({ nome: usuario.nome, historico, total })
     },
 

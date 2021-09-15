@@ -1,11 +1,14 @@
 /**
  * 
- * @param {String} date 
+ * @param {Array} dates 
  */
 
-const formatDate = date => {
-    const [ year, month, day ] = date.split('-')
-    return `${day}/${month}/${year}`
+const formatDate = dates => {
+    const formatedDate = dates.map(date => {
+        const [ year, month, day ] = date.data.split('-')
+        return { ...date._doc, data: `${day}/${month}/${year}`}
+    })
+    return formatedDate
 }
 
 module.exports = formatDate
